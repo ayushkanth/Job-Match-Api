@@ -1,0 +1,41 @@
+version: '3.8'
+
+services:
+  postgres:
+    image: postgres:16-alpine
+    container_name: jobmatch-postgres
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: jobmatchdb
+      POSTGRES_USER: jobmatch
+      POSTGRES_PASSWORD: jobmatchpass
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U jobmatch -d jobmatchdb"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+  api:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: jobmatch-api
+    restart: unless-stopped
+    depends_on:
+      - postgres
+    ports:
+      - "8080:8080"
+    environment:
+      SPRING_PROFILES_ACTIVE: postgres
+      DB_HOST: postgres
+      DB_PORT: 5432
+      DB_NAME: jobmatchdb
+      DB_USER: jobmatch
+      DB_PASSWORD: jobmatchpass
+
+volumes:
+  postgres_data:
