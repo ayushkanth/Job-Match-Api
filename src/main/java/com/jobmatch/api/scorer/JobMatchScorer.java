@@ -163,8 +163,12 @@ public class JobMatchScorer {
     }
 
     private Set<String> normalizeSkills(List<String> skills) {
+        if (skills == null) {
+            return Collections.emptySet();
+        }
         return skills.stream()
-                .map(String::toLowerCase)
+                .filter(s -> s != null && !s.isBlank())
+                .map(s -> s.trim().toLowerCase())
                 .collect(Collectors.toSet());
     }
 }
