@@ -40,7 +40,7 @@ public class CandidateController {
         return ResponseEntity.ok(response);
     }
 
-    @GetMapping("/{id}/recommendation")
+    @GetMapping("/{id}/recommendations")
     @Operation(summary = "Get job recommendations for a candidate", description = "Returns a ranked list of job recommendations evaluated by the transparent rule-based scoring engine")
     public ResponseEntity<List<RecommendationResponse>> getRecommendations(
             @PathVariable Long id,
